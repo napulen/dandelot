@@ -15,7 +15,6 @@ public class GameMasterController : MonoBehaviour {
         // Setting the inital staff arrangement
         List<string> initialStaffList = new List<string>();
         initialStaffList.Add("f_4");
-        initialStaffList.Add("g_2");
         staffMaster.EventSetInitialStaff(initialStaffList, gameObject);
         noteMaster.EventStartSpawningNotes("doremifasollasi", gameObject);
 	}
@@ -58,6 +57,18 @@ public class GameMasterController : MonoBehaviour {
         else
         {
             Debug.LogError("I only listen to EventNoteMispelled() calls from the NoteMaster", gameObject);
+        }
+    }
+
+    public void EventNoteMissed(GameObject caller)
+    {
+        if (caller == noteMaster.gameObject)
+        {
+            Debug.Log("It seems the user has missed a note", gameObject);
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventNoteMissed() calls from the NoteMaster", gameObject);
         }
     }
 

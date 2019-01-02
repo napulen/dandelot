@@ -37,8 +37,9 @@ public class StaffMasterController : MonoBehaviour {
         {
             timeElapsed = 0f;
             string[] clefs = new string[] {"g_2", "f_4", "c_3"};
-            int idx = Random.Range(0, 3);
-            staffList[0].SetClef(clefs[idx]);
+            int clefId = Random.Range(0, 3);
+            int staffId = Random.Range(0, staffList.Count);
+            staffList[staffId].SetClef(clefs[clefId]);
         }
 	}
 
@@ -204,7 +205,7 @@ public class StaffMasterController : MonoBehaviour {
             Debug.Log("Setting the inital staff", gameObject);
 			foreach (string clef in clefs)
 			{
-				StaffController staff = Instantiate(staffPrefab).GetComponent<StaffController>();
+				StaffController staff = Instantiate(staffPrefab, transform).GetComponent<StaffController>();
 				staff.SetClef(clef);
 				staffList.Add(staff);
 			}

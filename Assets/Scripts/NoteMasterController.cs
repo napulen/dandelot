@@ -9,7 +9,7 @@ public class NoteMasterController : MonoBehaviour {
     private GameMasterController gameMaster;
     private InputHandlerController inputHandler;
     private StaffMasterController staffMaster;
-    private List<GameObject> notes;
+    private Queue<NoteController> noteQueue;
     private Dictionary<string, Sprite> noteheadSpriteDict;
     private float avgNoteSpawnInterval;
     private float noteVelocity;
@@ -30,12 +30,13 @@ public class NoteMasterController : MonoBehaviour {
         inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
         InitDict("cdefgab");
+        noteQueue = new Queue<NoteController>();
         difficulty = 0;
         avgNoteSpawnInterval = 1f;
-        noteVelocity = 6f;
+        noteVelocity = 8f;
         shouldSpawnNotes = false;
-        GameObject background = GameObject.Find("Background");
-        notePositionX0 = background.transform.localScale.x / 2f;
+        GameObject pageArea = GameObject.Find("PageArea");
+        notePositionX0 = pageArea.transform.localScale.x / 2f;
         elapsedTime = 0f;
         currentNoteSpawnInterval = avgNoteSpawnInterval;
         posbottom = -5f;
@@ -51,15 +52,14 @@ public class NoteMasterController : MonoBehaviour {
         {
             // Reset the time counter
             elapsedTime = 0f;
-            // currentNoteSpawnInterval = Random.Range(avgNoteSpawnInterval * 0.5f, avgNoteSpawnInterval * 1.5f);
-            // Vector3 position = getNotePosition();
             Vector3 position = new Vector3(notePositionX0, currentpos, 0f);
             if (currentpos > postop) direction = -1f;
             if (currentpos < posbottom) direction = 1f;
             currentpos += 0.5f * direction;
-            NoteController newNote = Instantiate(noteprefab).GetComponent<NoteController>();
+            NoteController newNote = Instantiate(noteprefab, transform).GetComponent<NoteController>();
             newNote.transform.position = position;
             newNote.Initialize(noteVelocity);
+            noteQueue.Enqueue(newNote);
         }
 	}
 
@@ -132,10 +132,43 @@ public class NoteMasterController : MonoBehaviour {
         if (caller == inputHandler.gameObject)
         {
             Debug.Log("I heard that note " + note + " was spelled by the user", gameObject);
+            if (noteQueue.Peek().GetCurrentNote() == note)
+            {
+                gameMaster.EventNoteDestroyed(gameObject);
+                NoteController noteController = noteQueue.Dequeue();
+                Destroy(noteController.gameObject);
+            }
+            else
+            {
+                gameMaster.EventNoteMispelled(gameObject);
+            }
         }
         else
         {
             Debug.LogError("I only listen to EventNoteSpelled() calls from the InputHandler", gameObject);
+        }
+    }
+
+    public void EventNoteReachedEnd(GameObject caller)
+    {
+        if (caller.tag == "Note")
+        {
+            Debug.Log("I heard that a note has made it to the other side", gameObject);
+            gameMaster.EventNoteMissed(gameObject);
+            NoteController noteController = caller.GetComponent<NoteController>();
+            if (noteQueue.Peek() == noteController)
+            {
+                noteQueue.Dequeue();
+            }
+            else
+            {
+                Debug.LogError("A note that reached the other side is not the first element in the note queue");
+            }
+            Destroy(caller);
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventNoteReachedEnd() calls from NoteControllers", gameObject);
         }
     }
 

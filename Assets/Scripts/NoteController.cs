@@ -10,6 +10,7 @@ public class NoteController : MonoBehaviour {
     private StaffController currentStaff;
     private SpriteRenderer noteheadSprite;
     private GameObject stem;
+    private float notePositionXf;
     private float currentStaffPosition;
     private string currentNote;
     private float velocity;
@@ -18,6 +19,8 @@ public class NoteController : MonoBehaviour {
         noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
         noteheadSprite = gameObject.GetComponent<SpriteRenderer>();
+        GameObject pageArea = GameObject.Find("PageArea");
+        notePositionXf = -(pageArea.transform.localScale.x / 2f);
         stem = transform.Find("Stem").gameObject;
         currentStaffListString = new List<string>();
         currentStaff = null;
@@ -30,6 +33,11 @@ public class NoteController : MonoBehaviour {
     public void Initialize(float vel)
     {
         velocity = vel;
+    }
+
+    public string GetCurrentNote()
+    {
+        return currentNote;
     }
 
     private void StemUp()
@@ -83,6 +91,10 @@ public class NoteController : MonoBehaviour {
             Debug.Log("I am a " + currentNote + " in staff position " + currentStaffPosition + " of the " + currentStaff.GetClefString() + " staff");
         }
         transform.position += Vector3.left * velocity * Time.deltaTime;
+        if (transform.position.x <= notePositionXf)
+        {
+            noteMaster.EventNoteReachedEnd(gameObject);
+        }
 	}
 
     private void SetCurrentStaff()
