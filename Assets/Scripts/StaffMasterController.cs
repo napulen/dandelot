@@ -24,7 +24,7 @@ public class StaffMasterController : MonoBehaviour {
 		InitDict();
 		initialStaffSet = false;
 		difficulty = 0;
-        clefRotationTimeout = 4f;
+        clefRotationTimeout = 2f;
 		timeElapsed = 0f;
 	}
 
@@ -158,6 +158,16 @@ public class StaffMasterController : MonoBehaviour {
 		return staffList;
 	}
 
+    public List<string> GetStaffListString()
+    {
+        List<string> staffListString = new List<string>();
+        foreach (StaffController staff in staffList)
+        {
+            staffListString.Add(staff.GetClefString());
+        }
+        return staffListString;
+    }
+
 	public bool IsValidClef(string clef)
 	{
 		return clefDictionary.ContainsKey(clef);
@@ -206,5 +216,23 @@ public class StaffMasterController : MonoBehaviour {
         {
             Debug.LogError("I only listen to EventSetInitialStaff() calls from the GameMaster", gameObject);
         }
+    }
+
+    public bool IsLatestStaffList(List<string> staffListString)
+    {
+        if (staffList.Count != staffListString.Count) return false;
+
+        bool areEqual = true;
+        for (int i = 0; i < staffList.Count; i++)
+        {
+            // Debug.Log("staffList[" + i + "]: " + staffList[i].GetClefString() + ", other[" + i + "]: " + otherStaffList[i].GetClefString());
+            if (!(staffList[i].GetClefString() == staffListString[i]))
+            {
+                areEqual = false;
+                break;
+            }
+        }
+        return areEqual;
+
     }
 }

@@ -14,6 +14,7 @@ public class GameMasterController : MonoBehaviour {
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
         // Setting the inital staff arrangement
         List<string> initialStaffList = new List<string>();
+        initialStaffList.Add("f_4");
         initialStaffList.Add("g_2");
         staffMaster.EventSetInitialStaff(initialStaffList, gameObject);
         noteMaster.EventStartSpawningNotes("doremifasollasi", gameObject);

@@ -6,7 +6,7 @@ public class NoteController : MonoBehaviour {
     public GameObject ledgerLinePrefab;
     private NoteMasterController noteMaster;
     private StaffMasterController staffMaster;
-    private List<StaffController> lastStaffList;
+    private List<string> currentStaffListString;
     private StaffController currentStaff;
     private SpriteRenderer noteheadSprite;
     private GameObject stem;
@@ -19,7 +19,7 @@ public class NoteController : MonoBehaviour {
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
         noteheadSprite = gameObject.GetComponent<SpriteRenderer>();
         stem = transform.Find("Stem").gameObject;
-        lastStaffList = new List<StaffController>();
+        currentStaffListString = new List<string>();
         currentStaff = null;
         currentStaffPosition = 3f;
         currentNote = "";
@@ -68,16 +68,10 @@ public class NoteController : MonoBehaviour {
 
 	private void Update()
     {
-        List<StaffController> newStaffList = staffMaster.GetStaffList();
-        if (newStaffList.Count > 0 && newStaffList != lastStaffList)
+        if (!staffMaster.IsLatestStaffList(currentStaffListString))
         {
-            // TODO: Do the proper thing
-            currentStaff = newStaffList[0];
-            ////////////////////////////
-            lastStaffList = newStaffList;
-        }
-        if (currentStaff)
-        {
+            SetCurrentStaff();
+            currentStaffListString = staffMaster.GetStaffListString();
             currentStaffPosition = currentStaff.PositionY2StaffPosition(transform.position.y);
             if (currentStaffPosition > 3f)
                 StemDown();
@@ -88,7 +82,21 @@ public class NoteController : MonoBehaviour {
             AddAdditionalLines();
             Debug.Log("I am a " + currentNote + " in staff position " + currentStaffPosition + " of the " + currentStaff.GetClefString() + " staff");
         }
-
         transform.position += Vector3.left * velocity * Time.deltaTime;
 	}
+
+    private void SetCurrentStaff()
+    {
+        float shortestDistance = float.MaxValue;
+        foreach (StaffController staff in staffMaster.GetStaffList())
+        {
+            float distance = Mathf.Abs(staff.transform.position.y - transform.position.y);
+            if (distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                currentStaff = staff;
+            }
+        }
+        return;
+    }
 }
