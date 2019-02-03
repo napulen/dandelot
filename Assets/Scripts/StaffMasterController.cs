@@ -10,8 +10,7 @@ public class StaffMasterController : MonoBehaviour {
 	private List<StaffController> staffList;
 	private Dictionary<string, Dictionary<float, string> > clefDictionary;
 	private int difficulty;
-    private float clefRotationTimeout;
-    private float staffRotationTimeout;
+    private float rotationTimeout;
 	private float timeElapsed;
 	private bool initialStaffSet;
 
@@ -24,7 +23,7 @@ public class StaffMasterController : MonoBehaviour {
 		InitDict();
 		initialStaffSet = false;
 		difficulty = 0;
-        clefRotationTimeout = 2f;
+        rotationTimeout = 4f;
 		timeElapsed = 0f;
 	}
 
@@ -33,7 +32,7 @@ public class StaffMasterController : MonoBehaviour {
 		// If the GameMaster has not set an initial staff, just wait
 		if (!initialStaffSet) return;
 		timeElapsed += Time.deltaTime;
-        if (timeElapsed > clefRotationTimeout)
+        if (timeElapsed > rotationTimeout)
         {
             timeElapsed = 0f;
             string[] clefs = new string[] {"g_2", "f_4", "c_3"};

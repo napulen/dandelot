@@ -33,7 +33,7 @@ public class NoteMasterController : MonoBehaviour {
         noteQueue = new Queue<NoteController>();
         difficulty = 0;
         avgNoteSpawnInterval = 1f;
-        noteVelocity = 8f;
+        noteVelocity = 4f;
         shouldSpawnNotes = false;
         GameObject pageArea = GameObject.Find("PageArea");
         notePositionX0 = pageArea.transform.localScale.x / 2f;
@@ -132,7 +132,7 @@ public class NoteMasterController : MonoBehaviour {
         if (caller == inputHandler.gameObject)
         {
             Debug.Log("I heard that note " + note + " was spelled by the user", gameObject);
-            if (noteQueue.Peek().GetCurrentNote() == note)
+            if (noteQueue.Count > 0 && noteQueue.Peek().GetCurrentNote() == note)
             {
                 gameMaster.EventNoteDestroyed(gameObject);
                 NoteController noteController = noteQueue.Dequeue();
@@ -156,7 +156,7 @@ public class NoteMasterController : MonoBehaviour {
             Debug.Log("I heard that a note has made it to the other side", gameObject);
             gameMaster.EventNoteMissed(gameObject);
             NoteController noteController = caller.GetComponent<NoteController>();
-            if (noteQueue.Peek() == noteController)
+            if (noteQueue.Count > 0 && noteQueue.Peek() == noteController)
             {
                 noteQueue.Dequeue();
             }

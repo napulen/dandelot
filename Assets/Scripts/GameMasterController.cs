@@ -1,17 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameMasterController : MonoBehaviour {
     private InputHandlerController inputHandler;
     private NoteMasterController noteMaster;
     private StaffMasterController staffMaster;
 
+    private int streak;
+    private int score;
+
 	private void Start ()
     {
         inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
         noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
+
+
         // Setting the inital staff arrangement
         List<string> initialStaffList = new List<string>();
         initialStaffList.Add("f_4");
@@ -41,6 +47,8 @@ public class GameMasterController : MonoBehaviour {
         if (caller == noteMaster.gameObject)
         {
             Debug.Log("I have heard that a note has been destroyed", gameObject);
+            score++;
+            streak++;
         }
         else
         {
@@ -53,6 +61,7 @@ public class GameMasterController : MonoBehaviour {
         if (caller == noteMaster.gameObject)
         {
             Debug.Log("I have heard that a note has been mispelled", gameObject);
+            streak = 0;
         }
         else
         {
@@ -65,6 +74,7 @@ public class GameMasterController : MonoBehaviour {
         if (caller == noteMaster.gameObject)
         {
             Debug.Log("It seems the user has missed a note", gameObject);
+
         }
         else
         {
