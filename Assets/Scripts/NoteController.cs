@@ -9,7 +9,7 @@ public class NoteController : MonoBehaviour {
     private List<string> currentStaffListString;
     private StaffController currentStaff;
     private SpriteRenderer noteheadSprite;
-    private GameObject stem;
+    // private GameObject stem;
     private float notePositionXf;
     private float currentStaffPosition;
     private string currentNote;
@@ -21,13 +21,13 @@ public class NoteController : MonoBehaviour {
         noteheadSprite = gameObject.GetComponent<SpriteRenderer>();
         GameObject pageArea = GameObject.Find("PageArea");
         notePositionXf = -(pageArea.transform.localScale.x / 2f);
-        stem = transform.Find("Stem").gameObject;
+        // stem = transform.Find("Stem").gameObject;
         currentStaffListString = new List<string>();
         currentStaff = null;
         currentStaffPosition = 3f;
         currentNote = "";
         velocity = 0f;
-        StemUp();
+        // StemUp();
 	}
 
     public void Initialize(float vel)
@@ -40,6 +40,7 @@ public class NoteController : MonoBehaviour {
         return currentNote;
     }
 
+    /*
     private void StemUp()
     {
         stem.transform.localPosition = new Vector3(0.55f, 1.75f, 0f);
@@ -49,6 +50,7 @@ public class NoteController : MonoBehaviour {
     {
         stem.transform.localPosition = new Vector3(-0.55f, -1.75f, 0f);
     }
+    */
 
     private void AddAdditionalLines()
     {
@@ -81,10 +83,10 @@ public class NoteController : MonoBehaviour {
             SetCurrentStaff();
             currentStaffListString = staffMaster.GetStaffListString();
             currentStaffPosition = currentStaff.PositionY2StaffPosition(transform.position.y);
-            if (currentStaffPosition > 3f)
-                StemDown();
-            else
-                StemUp();
+            // if (currentStaffPosition > 3f)
+            //    StemDown();
+            // else
+            //     StemUp();
             currentNote = currentStaff.StaffPosition2Note(currentStaffPosition);
             noteheadSprite.sprite = noteMaster.GetNoteheadSprite(currentNote);
             AddAdditionalLines();
