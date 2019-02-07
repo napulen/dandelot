@@ -6,6 +6,8 @@ public class NoteController : MonoBehaviour {
     public GameObject ledgerLinePrefab;
     private NoteMasterController noteMaster;
     private StaffMasterController staffMaster;
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
     private float notePositionXf;
     private float staffPosition;
     private string noteString;
@@ -15,6 +17,8 @@ public class NoteController : MonoBehaviour {
     {
         noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         GameObject pageArea = GameObject.Find("PageArea");
         notePositionXf = -(pageArea.transform.localScale.x / 2f);
         staffPosition = 3f;
@@ -22,11 +26,28 @@ public class NoteController : MonoBehaviour {
         velocity = 0f;
 	}
 
-    public void Initialize(float vel, string clef, string note)
+    public void Initialize(float vel, string clef, float staffPos)
     {
         velocity = vel;
         clefType = clef;
-        noteString = note;
+        staffPosition = staffPos;
+        noteString = staffMaster.GetNote(clef, staffPosition);
+        string[] clefStaffLine = clef.Split('_');
+        switch(clefStaffLine[0])
+        {
+            case "g":
+                animator.SetBool("ClefG", true);
+                spriteRenderer.color = Color.blue;
+                break;
+            case "f":
+                animator.SetBool("ClefF", true);
+                spriteRenderer.color = Color.red;
+                break;
+            case "c":
+                animator.SetBool("ClefC", true);
+                spriteRenderer.color = Color.green;
+                break;
+        }
     }
 
     public string GetNote()
@@ -71,9 +92,10 @@ public class NoteController : MonoBehaviour {
         //     currentStaffListString = staffMaster.GetStaffListString();
         //     currentStaffPosition = currentStaff.PositionY2StaffPosition(transform.position.y);
         //     currentNote = currentStaff.StaffPosition2Note(currentStaffPosition);
-        //     AddAdditionalLines();
+        //
         //     Debug.Log("I am a " + currentNote + " in staff position " + currentStaffPosition + " of the " + currentStaff.GetClefString() + " staff");
         // }
+        AddAdditionalLines();
         transform.position += Vector3.left * velocity * Time.deltaTime;
         if (transform.position.x <= notePositionXf)
         {

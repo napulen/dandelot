@@ -861,17 +861,18 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
-    m_NormalColor: {r: 0.8490566, g: 0.6826374, b: 0, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.9685757, b: 0, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300006, guid: 5045cc122f463c1409e533011205389b,
+      type: 3}
+    m_PressedSprite: {fileID: 21300012, guid: 5045cc122f463c1409e533011205389b, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -904,8 +905,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 5045cc122f463c1409e533011205389b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1296,6 +1297,71 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1394160356
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501827247828830, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1942192424948602, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+      propertyPath: m_Name
+      value: StaffMaster
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4e75be94d6ffac64381bdacd1a10c997, type: 2}
+  m_IsPrefabAsset: 0
+--- !u!1 &1415711613 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1942192424948602, guid: 4e75be94d6ffac64381bdacd1a10c997,
+    type: 2}
+  m_PrefabInternal: {fileID: 1394160356}
+--- !u!114 &1415711614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1415711613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ffaf61e3478b0442be2fcdda8aa0ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clefSpriteG: {fileID: 21300000, guid: d9938e12cbd54f640abd51137a49d742, type: 3}
+  clefSpriteF: {fileID: 21300000, guid: 59bc836bed0921e458e67aa9d1b6542d, type: 3}
+  clefSpriteC: {fileID: 21300000, guid: bb7745a0c8912e848b57b921fe9bd845, type: 3}
 --- !u!1 &1443710963
 GameObject:
   m_ObjectHideFlags: 0
@@ -1732,7 +1798,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: C
+  m_Text: 
 --- !u!222 &1565311678
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1966,6 +2032,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 212502606189937486, guid: 5f928ae1029c8934c9030530a8fbd3f3,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 95447093932096644, guid: 5f928ae1029c8934c9030530a8fbd3f3,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f928ae1029c8934c9030530a8fbd3f3, type: 2}
   m_IsPrefabAsset: 0
@@ -2081,48 +2157,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2104280409}
   m_CullTransparentMesh: 0
---- !u!1 &2114048038
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2114048039}
-  - component: {fileID: 2114048040}
-  m_Layer: 0
-  m_Name: StaffMaster
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2114048039
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2114048038}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2114048040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2114048038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ffaf61e3478b0442be2fcdda8aa0ec6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  staffPrefab: {fileID: 114679866159048978, guid: 4e75be94d6ffac64381bdacd1a10c997,
-    type: 2}
 --- !u!1 &2123046546
 GameObject:
   m_ObjectHideFlags: 0

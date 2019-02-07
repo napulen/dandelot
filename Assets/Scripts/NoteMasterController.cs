@@ -32,7 +32,7 @@ public class NoteMasterController : MonoBehaviour {
         noteQueue = new Queue<NoteController>();
         difficulty = 0;
         avgNoteSpawnInterval = 1f;
-        noteVelocity = 4f;
+        noteVelocity = 1f;
         shouldSpawnNotes = false;
         GameObject pageArea = GameObject.Find("PageArea");
         notePositionX0 = pageArea.transform.localScale.x / 2f;
@@ -51,15 +51,18 @@ public class NoteMasterController : MonoBehaviour {
         elapsedTime += Time.deltaTime;
         if (shouldSpawnNotes && elapsedTime > currentNoteSpawnInterval)
         {
-            // Reset the time counter
-            elapsedTime = 0f;
-            Vector3 position = new Vector3(notePositionX0, currentpos, 0f);
+            // temporary
             if (currentpos > postop) direction = -1f;
             if (currentpos < posbottom) direction = 1f;
             currentpos += 0.5f * direction;
+
+            elapsedTime = 0f;
+            Vector3 position = new Vector3(notePositionX0, currentpos, 0f);
             NoteController newNote = Instantiate(noteprefab, transform).GetComponent<NoteController>();
             newNote.transform.position = position;
-            newNote.Initialize(noteVelocity, "g_2", "b");
+            float staffPosition = staffMaster.PositionY2StaffPosition(currentpos);
+            string clef = staffMaster.GenerateClefForNote();
+            newNote.Initialize(noteVelocity, clef, staffPosition);
             noteQueue.Enqueue(newNote);
         }
 	}

@@ -179,12 +179,15 @@ public class StaffMasterController : MonoBehaviour {
         {
             case "g":
                 clefSpriteRenderer.sprite = clefSpriteG;
+                clefSpriteRenderer.color = Color.blue;
                 break;
             case "f":
                 clefSpriteRenderer.sprite = clefSpriteF;
+                clefSpriteRenderer.color = Color.red;
                 break;
             case "c":
                 clefSpriteRenderer.sprite = clefSpriteC;
+                clefSpriteRenderer.color = Color.green;
                 break;
             default:
                 Debug.LogError("Invalid clef name", gameObject);
@@ -192,6 +195,7 @@ public class StaffMasterController : MonoBehaviour {
         }
         currentClefName = clefName;
         currentClefStaffLine = staffLine;
+        currentClef = clefName + "_" + staffLine;
         clefObject.transform.localPosition = new Vector3(clefObject.transform.localPosition.x, (float)staffLine - 3f, 0f);
     }
 
@@ -239,5 +243,12 @@ public class StaffMasterController : MonoBehaviour {
         else if (Mathf.Approximately(fraction, -0.5f)) fraction = -0.5f;
         else fraction = 0f;
         return (int)staffPosition + fraction;
+    }
+
+    public string GenerateClefForNote()
+    {
+        string [] clefs = {"g_2", "f_4"};
+        int randClef = Random.Range(0, clefs.Length);
+        return clefs[randClef];
     }
 }
