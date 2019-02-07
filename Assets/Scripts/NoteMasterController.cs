@@ -10,7 +10,6 @@ public class NoteMasterController : MonoBehaviour {
     private InputHandlerController inputHandler;
     private StaffMasterController staffMaster;
     private Queue<NoteController> noteQueue;
-    private Dictionary<string, Sprite> noteheadSpriteDict;
     private float avgNoteSpawnInterval;
     private float noteVelocity;
     private bool shouldSpawnNotes;
@@ -19,6 +18,7 @@ public class NoteMasterController : MonoBehaviour {
     private float currentNoteSpawnInterval;
     private int difficulty;
 
+    // temporary
     private float posbottom;
     private float postop;
     private float currentpos;
@@ -29,7 +29,6 @@ public class NoteMasterController : MonoBehaviour {
         gameMaster = GameObject.Find("GameMaster").GetComponent<GameMasterController>();
         inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
-        InitDict("cdefgab");
         noteQueue = new Queue<NoteController>();
         difficulty = 0;
         avgNoteSpawnInterval = 1f;
@@ -39,6 +38,8 @@ public class NoteMasterController : MonoBehaviour {
         notePositionX0 = pageArea.transform.localScale.x / 2f;
         elapsedTime = 0f;
         currentNoteSpawnInterval = avgNoteSpawnInterval;
+
+        // temporary
         posbottom = -5f;
         postop = 5f;
         currentpos = posbottom;
@@ -58,54 +59,10 @@ public class NoteMasterController : MonoBehaviour {
             currentpos += 0.5f * direction;
             NoteController newNote = Instantiate(noteprefab, transform).GetComponent<NoteController>();
             newNote.transform.position = position;
-            newNote.Initialize(noteVelocity);
+            newNote.Initialize(noteVelocity, "g_2", "b");
             noteQueue.Enqueue(newNote);
         }
 	}
-
-    private void InitDict(string noteSystem)
-    {
-        switch(noteSystem)
-        {
-            default:
-            case "cdefgab":
-                noteheadSpriteDict = new Dictionary<string, Sprite>()
-                {
-                    {"c", noteheadsCDE[0]}, {"d", noteheadsCDE[1]},
-                    {"e", noteheadsCDE[2]}, {"f", noteheadsCDE[3]},
-                    {"g", noteheadsCDE[4]}, {"a", noteheadsCDE[5]},
-                    {"b", noteheadsCDE[6]}
-                };
-                break;
-            case "cdefgah":
-                noteheadSpriteDict = new Dictionary<string, Sprite>()
-                {
-                    {"c", noteheadsCDE[0]}, {"d", noteheadsCDE[1]},
-                    {"e", noteheadsCDE[2]}, {"f", noteheadsCDE[3]},
-                    {"g", noteheadsCDE[4]}, {"a", noteheadsCDE[5]},
-                    {"b", noteheadsCDE[7]}
-                };
-                break;
-            case "doremifasollasi":
-                noteheadSpriteDict = new Dictionary<string, Sprite>()
-                {
-                    {"c", noteheadsDoReMi[0]}, {"d", noteheadsDoReMi[1]},
-                    {"e", noteheadsDoReMi[2]}, {"f", noteheadsDoReMi[3]},
-                    {"g", noteheadsDoReMi[4]}, {"a", noteheadsDoReMi[5]},
-                    {"b", noteheadsDoReMi[6]}
-                };
-                break;
-            case "doremifasollati":
-                noteheadSpriteDict = new Dictionary<string, Sprite>()
-                {
-                    {"c", noteheadsDoReMi[0]}, {"d", noteheadsDoReMi[1]},
-                    {"e", noteheadsDoReMi[2]}, {"f", noteheadsDoReMi[3]},
-                    {"g", noteheadsDoReMi[4]}, {"a", noteheadsDoReMi[5]},
-                    {"b", noteheadsDoReMi[7]}
-                };
-                break;
-        }
-    }
 
     private Vector3 getNotePosition ()
     {
@@ -114,25 +71,15 @@ public class NoteMasterController : MonoBehaviour {
         return new Vector3(notePositionX0, originY, 0f);
     }
 
-    public Sprite GetNoteheadSprite(string note)
-    {
-        if (noteheadSpriteDict.ContainsKey(note))
-        {
-            return noteheadSpriteDict[note];
-        }
-        else
-        {
-            Debug.LogError("Invalid note " + note);
-            return null;
-        }
-    }
-
     public void EventNoteSpelled(string note, GameObject caller)
     {
         if (caller == inputHandler.gameObject)
         {
             Debug.Log("I heard that note " + note + " was spelled by the user", gameObject);
-            if (noteQueue.Count > 0 && noteQueue.Peek().GetCurrentNote() == note)
+            string currentClef = staffMaster.GetClef();
+            if (noteQueue.Count > 0 &&
+                noteQueue.Peek().GetClefType() == currentClef &&
+                noteQueue.Peek().GetNote() == note)
             {
                 gameMaster.EventNoteDestroyed(gameObject);
                 NoteController noteController = noteQueue.Dequeue();
@@ -197,12 +144,11 @@ public class NoteMasterController : MonoBehaviour {
         }
     }
 
-    public void EventStartSpawningNotes(string noteSystem, GameObject caller)
+    public void EventStartSpawningNotes(GameObject caller)
     {
         if (caller == gameMaster.gameObject)
         {
             Debug.Log("Starting (or restarting) the stream of notes", gameObject);
-            InitDict(noteSystem);
             shouldSpawnNotes = true;
         }
         else

@@ -3,43 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StaffMasterController : MonoBehaviour {
-	public StaffController staffPrefab;
 	private GameMasterController gameMaster;
 	private InputHandlerController inputHandler;
 	private NoteMasterController noteMaster;
-	private List<StaffController> staffList;
-	private Dictionary<string, Dictionary<float, string> > clefDictionary;
+	private GameObject clefObject;
+    public Sprite clefSpriteG;
+    public Sprite clefSpriteF;
+    public Sprite clefSpriteC;
+    private SpriteRenderer clefSpriteRenderer;
+    private string currentClef;
+    private string currentClefName;
+    private int currentClefStaffLine;
+    private Dictionary<string, Dictionary<float, string> > clefDictionary;
 	private int difficulty;
-    private float rotationTimeout;
-	private float timeElapsed;
-	private bool initialStaffSet;
 
 	private void Awake ()
 	{
 		gameMaster = GameObject.Find("GameMaster").GetComponent<GameMasterController>();
 		inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
 		noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
-		staffList = new List<StaffController>();
-		InitDict();
-		initialStaffSet = false;
+		clefObject = transform.Find("Clef").gameObject;
+        clefSpriteRenderer = clefObject.GetComponent<SpriteRenderer>();
+        InitDict();
+        SetClef("g_2");
 		difficulty = 0;
-        rotationTimeout = 4f;
-		timeElapsed = 0f;
 	}
 
 	private void Update ()
 	{
-		// If the GameMaster has not set an initial staff, just wait
-		if (!initialStaffSet) return;
-		timeElapsed += Time.deltaTime;
-        if (timeElapsed > rotationTimeout)
-        {
-            timeElapsed = 0f;
-            string[] clefs = new string[] {"g_2", "f_4", "c_3"};
-            int clefId = Random.Range(0, 3);
-            int staffId = Random.Range(0, staffList.Count);
-            staffList[staffId].SetClef(clefs[clefId]);
-        }
+		// timeElapsed += Time.deltaTime;
+        // if (timeElapsed > rotationTimeout)
+        // {
+        //     timeElapsed = 0f;
+        //     string[] clefs = new string[] {"g_2", "f_4", "c_3"};
+        //     int clefId = Random.Range(0, 3);
+        //     int staffId = Random.Range(0, staffList.Count);
+        //     staffList[staffId].SetClef(clefs[clefId]);
+        // }
 	}
 
 	private void InitDict()
@@ -139,33 +139,17 @@ public class StaffMasterController : MonoBehaviour {
         };
     }
 
-	private void OrderStaffs()
-	{
-		int numberOfStaffs = staffList.Count;
-		if (numberOfStaffs == 1)
-		{
-			staffList[0].transform.localPosition = Vector3.zero;
-		}
-		if (numberOfStaffs == 2)
-		{
-			staffList[0].transform.localPosition = new Vector3(0f, -4f, 0f);
-			staffList[1].transform.localPosition = new Vector3(0f, 4f, 0f);
-		}
-	}
-
-	public List<StaffController> GetStaffList()
-	{
-		return staffList;
-	}
-
-    public List<string> GetStaffListString()
+    public void EventDifficultyChanged(int d, GameObject caller)
     {
-        List<string> staffListString = new List<string>();
-        foreach (StaffController staff in staffList)
+        if (caller == gameMaster.gameObject)
         {
-            staffListString.Add(staff.GetClefString());
+            difficulty = d;
+            Debug.Log("I heard that the difficulty has changed to " + d, gameObject);
         }
-        return staffListString;
+        else
+        {
+            Debug.LogError("I only listen to EventDifficultyChanged() calls from the GameMaster", gameObject);
+        }
     }
 
 	public bool IsValidClef(string clef)
@@ -184,55 +168,76 @@ public class StaffMasterController : MonoBehaviour {
         return "";
 	}
 
-	public void EventDifficultyChanged(int d, GameObject caller)
+    public void SetClef(string clefName, int staffLine)
     {
-        if (caller == gameMaster.gameObject)
+        if (staffLine < 1 || staffLine > 5)
         {
-            difficulty = d;
-            Debug.Log("I heard that the difficulty has changed to " + d, gameObject);
+            Debug.LogError("Invalid range for clef positions", gameObject);
+            return;
         }
-        else
+        switch(clefName)
         {
-            Debug.LogError("I only listen to EventDifficultyChanged() calls from the GameMaster", gameObject);
-        }
-    }
-
-	public void EventSetInitialStaff(List<string> clefs, GameObject caller)
-    {
-        if (caller == gameMaster.gameObject)
-        {
-            Debug.Log("Setting the inital staff", gameObject);
-			foreach (string clef in clefs)
-			{
-				StaffController staff = Instantiate(staffPrefab, transform).GetComponent<StaffController>();
-				staff.SetClef(clef);
-				staffList.Add(staff);
-			}
-			OrderStaffs();
-			initialStaffSet = true;
-			gameMaster.EventStaffReady(gameObject);
-        }
-        else
-        {
-            Debug.LogError("I only listen to EventSetInitialStaff() calls from the GameMaster", gameObject);
-        }
-    }
-
-    public bool IsLatestStaffList(List<string> staffListString)
-    {
-        if (staffList.Count != staffListString.Count) return false;
-
-        bool areEqual = true;
-        for (int i = 0; i < staffList.Count; i++)
-        {
-            // Debug.Log("staffList[" + i + "]: " + staffList[i].GetClefString() + ", other[" + i + "]: " + otherStaffList[i].GetClefString());
-            if (!(staffList[i].GetClefString() == staffListString[i]))
-            {
-                areEqual = false;
+            case "g":
+                clefSpriteRenderer.sprite = clefSpriteG;
                 break;
-            }
+            case "f":
+                clefSpriteRenderer.sprite = clefSpriteF;
+                break;
+            case "c":
+                clefSpriteRenderer.sprite = clefSpriteC;
+                break;
+            default:
+                Debug.LogError("Invalid clef name", gameObject);
+                return;
         }
-        return areEqual;
+        currentClefName = clefName;
+        currentClefStaffLine = staffLine;
+        clefObject.transform.localPosition = new Vector3(clefObject.transform.localPosition.x, (float)staffLine - 3f, 0f);
+    }
 
+    public void SetClef(string clef)
+    {
+        if (!IsValidClef(clef))
+        {
+            Debug.LogError(clef + " is an invalid clef string");
+            return;
+        }
+        string[] tokens = clef.Split('_');
+        int line = 0;
+        int.TryParse(tokens[1], out line);
+        SetClef(tokens[0], line);
+    }
+
+    public string GetClef()
+    {
+        return currentClef;
+    }
+
+    public string GetClefName()
+    {
+        return currentClefName;
+    }
+
+    public int GetClefStaffLine()
+    {
+        return currentClefStaffLine;
+    }
+
+    public float StaffPosition2PositionY(float staffPosition)
+    {
+        float offset = staffPosition - 3f;
+        float positionY = transform.position.y;
+		return positionY + offset;
+    }
+
+    public float PositionY2StaffPosition(float positionY)
+    {
+        float offset = positionY - transform.position.y;
+        float staffPosition = offset + 3f;
+        float fraction = staffPosition - (int)staffPosition;
+        if (Mathf.Approximately(fraction, 0.5f)) fraction = 0.5f;
+        else if (Mathf.Approximately(fraction, -0.5f)) fraction = -0.5f;
+        else fraction = 0f;
+        return (int)staffPosition + fraction;
     }
 }

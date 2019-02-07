@@ -16,13 +16,7 @@ public class GameMasterController : MonoBehaviour {
         inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
         noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
-
-
-        // Setting the inital staff arrangement
-        List<string> initialStaffList = new List<string>();
-        initialStaffList.Add("f_4");
-        staffMaster.EventSetInitialStaff(initialStaffList, gameObject);
-        noteMaster.EventStartSpawningNotes("doremifasollasi", gameObject);
+        noteMaster.EventStartSpawningNotes(gameObject);
 	}
 
 	private void Update ()
@@ -82,18 +76,6 @@ public class GameMasterController : MonoBehaviour {
         }
     }
 
-    public void EventStaffReady(GameObject caller)
-    {
-        if (caller == staffMaster.gameObject)
-        {
-            Debug.Log("I have heard that a staff has been finally set", gameObject);
-        }
-        else
-        {
-            Debug.LogError("I only listen to EventStaffReady() calls from the StaffMaster", gameObject);
-        }
-    }
-
     public void EventClefChanged(GameObject caller)
     {
         if (caller == staffMaster.gameObject)
@@ -103,18 +85,6 @@ public class GameMasterController : MonoBehaviour {
         else
         {
             Debug.LogError("I only listen to EventClefChanged() calls from the StaffMaster", gameObject);
-        }
-    }
-
-    public void EventStaffChanged(GameObject caller)
-    {
-        if (caller == staffMaster.gameObject)
-        {
-            Debug.Log("I have heard that a staff has changed", gameObject);
-        }
-        else
-        {
-            Debug.LogError("I only listen to EventStaffChanged() calls from the StaffMaster", gameObject);
         }
     }
 }

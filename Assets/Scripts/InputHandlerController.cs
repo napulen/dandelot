@@ -44,5 +44,17 @@ public class InputHandlerController : MonoBehaviour {
         {
             noteMaster.EventNoteSpelled("g", gameObject);
         }
+        if (Input.GetKeyDown("1"))
+        {
+            staffMaster.SetClef("g_2");
+        }
+        if (Input.GetKeyDown("2"))
+        {
+            staffMaster.SetClef("f_4");
+        }
+        if (Input.GetKeyDown("3"))
+        {
+            staffMaster.SetClef("c_3");
+        }
     }
 }
