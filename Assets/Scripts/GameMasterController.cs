@@ -8,6 +8,9 @@ public class GameMasterController : MonoBehaviour {
     private NoteMasterController noteMaster;
     private StaffMasterController staffMaster;
 
+    public Text streakText;
+    public Text scoreText;
+
     private int streak;
     private int score;
 
@@ -21,7 +24,15 @@ public class GameMasterController : MonoBehaviour {
 
 	private void Update ()
     {
-
+        if (streak > 1)
+        {
+            streakText.text = streak + "x streak!";
+        }
+        else
+        {
+            streakText.text = "";
+        }
+        scoreText.text = "Score: " + score;
 	}
 
     public void EventNoteSpawned(GameObject caller)
@@ -60,6 +71,18 @@ public class GameMasterController : MonoBehaviour {
         else
         {
             Debug.LogError("I only listen to EventNoteMispelled() calls from the NoteMaster", gameObject);
+        }
+    }
+
+    public void EventNoteSpelled(GameObject caller)
+    {
+        if (caller == noteMaster.gameObject)
+        {
+            Debug.Log("I have heard that a note has been spelled", gameObject);
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventNoteSpelled() calls from the NoteMaster", gameObject);
         }
     }
 

@@ -10,6 +10,7 @@ public class StaffMasterController : MonoBehaviour {
     public Sprite clefSpriteG;
     public Sprite clefSpriteF;
     public Sprite clefSpriteC;
+    public ProjectileController projectilePrefab;
     private SpriteRenderer clefSpriteRenderer;
     private string currentClef;
     private string currentClefName;
@@ -149,6 +150,20 @@ public class StaffMasterController : MonoBehaviour {
         else
         {
             Debug.LogError("I only listen to EventDifficultyChanged() calls from the GameMaster", gameObject);
+        }
+    }
+
+    public void EventNoteSpelled(NoteController note, GameObject caller)
+    {
+        if (caller = noteMaster.gameObject)
+        {
+            ProjectileController projectile = Instantiate(projectilePrefab).GetComponent<ProjectileController>();
+            projectile.transform.position = clefObject.transform.position;
+            projectile.Initialize(note.gameObject, clefObject, -40f, 30f);
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventNoteSpelled() calls from the NoteMaster", gameObject);
         }
     }
 

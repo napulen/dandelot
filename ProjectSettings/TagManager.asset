@@ -9,6 +9,7 @@ TagManager:
   - StaffLine
   - Note
   - Background
+  - Projectile
   layers:
   - Default
   - TransparentFX

@@ -32,7 +32,7 @@ public class NoteMasterController : MonoBehaviour {
         noteQueue = new Queue<NoteController>();
         difficulty = 0;
         avgNoteSpawnInterval = 1f;
-        noteVelocity = 1f;
+        noteVelocity = 2f;
         shouldSpawnNotes = false;
         GameObject pageArea = GameObject.Find("PageArea");
         notePositionX0 = pageArea.transform.localScale.x / 2f;
@@ -84,9 +84,10 @@ public class NoteMasterController : MonoBehaviour {
                 noteQueue.Peek().GetClefType() == currentClef &&
                 noteQueue.Peek().GetNote() == note)
             {
-                gameMaster.EventNoteDestroyed(gameObject);
+                gameMaster.EventNoteSpelled(gameObject);
                 NoteController noteController = noteQueue.Dequeue();
-                Destroy(noteController.gameObject);
+                noteController.Spelled();
+                staffMaster.EventNoteSpelled(noteController, gameObject);
             }
             else
             {
@@ -97,6 +98,24 @@ public class NoteMasterController : MonoBehaviour {
         {
             Debug.LogError("I only listen to EventNoteSpelled() calls from the InputHandler", gameObject);
         }
+    }
+
+    public void EventNoteHit(GameObject obj, GameObject caller)
+    {
+        if (caller.tag == "Projectile")
+        {
+            gameMaster.EventNoteDestroyed(gameObject);
+            Destroy(obj);
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventNoteHit() calls from a projectile");
+        }
+    }
+
+    public bool IsFrontNote(NoteController note)
+    {
+        return (noteQueue.Count > 0 && noteQueue.Peek() == note);
     }
 
     public void EventNoteReachedEnd(GameObject caller)

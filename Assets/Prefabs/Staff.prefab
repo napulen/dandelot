@@ -82,9 +82,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92289d7fcac8634aa3863977c4bc55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clefSpriteG: {fileID: 21300000, guid: d9938e12cbd54f640abd51137a49d742, type: 3}
-  clefSpriteF: {fileID: 21300000, guid: 59bc836bed0921e458e67aa9d1b6542d, type: 3}
-  clefSpriteC: {fileID: 21300000, guid: bb7745a0c8912e848b57b921fe9bd845, type: 3}
 --- !u!212 &212076315340432752
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -167,7 +164,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: aafb18ba160f3b3439c9f78ca39d4bba, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

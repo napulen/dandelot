@@ -50,6 +50,13 @@ public class NoteController : MonoBehaviour {
         }
     }
 
+    public void Spelled()
+    {
+        Color tmp = spriteRenderer.color;
+        tmp.a = 0.4f;
+        spriteRenderer.color = tmp;
+    }
+
     public string GetNote()
     {
         return noteString;
