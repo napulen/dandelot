@@ -1,60 +1,143 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputHandlerController : MonoBehaviour {
     private GameMasterController gameMaster;
     private NoteMasterController noteMaster;
     private StaffMasterController staffMaster;
 
+    public Button buttonC;
+    public Button buttonD;
+    public Button buttonE;
+    public Button buttonF;
+    public Button buttonG;
+    public Button buttonA;
+    public Button buttonB;
+    public Button buttonPowerUp;
+
+    private bool axisInUse;
+    private int clefIndex;
+
     private void Awake ()
     {
         gameMaster = GameObject.Find("GameMaster").GetComponent<GameMasterController>();
         noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
+
+        buttonC.onClick.AddListener(NoteCSpelled);
+        buttonD.onClick.AddListener(NoteDSpelled);
+        buttonE.onClick.AddListener(NoteESpelled);
+        buttonF.onClick.AddListener(NoteFSpelled);
+        buttonG.onClick.AddListener(NoteGSpelled);
+        buttonA.onClick.AddListener(NoteASpelled);
+        buttonB.onClick.AddListener(NoteBSpelled);
+
+        axisInUse = false;
+        clefIndex = 0;
+    }
+
+    private void NoteCSpelled()
+    {
+        noteMaster.EventNoteSpelled("c", gameObject);
+
+    }
+
+    private void NoteDSpelled()
+    {
+        noteMaster.EventNoteSpelled("d", gameObject);
+    }
+
+    private void NoteESpelled()
+    {
+        noteMaster.EventNoteSpelled("e", gameObject);
+    }
+
+    private void NoteFSpelled()
+    {
+        noteMaster.EventNoteSpelled("f", gameObject);
+    }
+
+    private void NoteGSpelled()
+    {
+        noteMaster.EventNoteSpelled("g", gameObject);
+    }
+
+    private void NoteASpelled()
+    {
+        noteMaster.EventNoteSpelled("a", gameObject);
+    }
+
+    private void NoteBSpelled()
+    {
+        noteMaster.EventNoteSpelled("b", gameObject);
     }
 
 	private void Update ()
     {
-        if (Input.GetKeyDown("a"))
+        if (Input.GetButtonDown("A"))
         {
-            noteMaster.EventNoteSpelled("a", gameObject);
+            NoteASpelled();
         }
-        if (Input.GetKeyDown("b"))
+        if (Input.GetButtonDown("B"))
         {
-            noteMaster.EventNoteSpelled("b", gameObject);
+            NoteBSpelled();
         }
-        if (Input.GetKeyDown("c"))
+        if (Input.GetButtonDown("C"))
         {
-            noteMaster.EventNoteSpelled("c", gameObject);
+            NoteCSpelled();
         }
-        if (Input.GetKeyDown("d"))
+        if (Input.GetButtonDown("D"))
         {
-            noteMaster.EventNoteSpelled("d", gameObject);
+            NoteDSpelled();
         }
-        if (Input.GetKeyDown("e"))
+        if (Input.GetButtonDown("E"))
         {
-            noteMaster.EventNoteSpelled("e", gameObject);
+            NoteESpelled();
         }
-        if (Input.GetKeyDown("f"))
+        if (Input.GetButtonDown("F"))
         {
-            noteMaster.EventNoteSpelled("f", gameObject);
+            NoteFSpelled();
         }
-        if (Input.GetKeyDown("g"))
+        if (Input.GetButtonDown("G"))
         {
-            noteMaster.EventNoteSpelled("g", gameObject);
+            NoteGSpelled();
         }
-        if (Input.GetKeyDown("1"))
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        if (horizontal != 0f)
         {
-            staffMaster.SetClef("g_2");
+            if (!axisInUse)
+            {
+                axisInUse = true;
+                float sign = Mathf.Sign(horizontal);
+                if (sign > 0)
+                {
+                    clefIndex = (clefIndex + 1) % 3;
+                    Debug.Log("Rotating right!");
+                }
+                else
+                {
+                    clefIndex = (clefIndex + 2) % 3;
+                    Debug.Log("Rotating left!");
+                }
+                switch(clefIndex)
+                {
+                    case 0:
+                        staffMaster.SetClef("g_2");
+                        break;
+                    case 1:
+                        staffMaster.SetClef("f_4");
+                        break;
+                    case 2:
+                        staffMaster.SetClef("c_3");
+                        break;
+                }
+            }
         }
-        if (Input.GetKeyDown("2"))
+        if (horizontal == 0f)
         {
-            staffMaster.SetClef("f_4");
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            staffMaster.SetClef("c_3");
+            axisInUse = false;
         }
     }
 }

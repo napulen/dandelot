@@ -12,6 +12,7 @@ public class StaffMasterController : MonoBehaviour {
     public Sprite clefSpriteC;
     public ProjectileController projectilePrefab;
     private SpriteRenderer clefSpriteRenderer;
+    private AudioSource audioSource;
     private string currentClef;
     private string currentClefName;
     private int currentClefStaffLine;
@@ -23,6 +24,7 @@ public class StaffMasterController : MonoBehaviour {
 		gameMaster = GameObject.Find("GameMaster").GetComponent<GameMasterController>();
 		inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
 		noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
+        audioSource = GetComponent<AudioSource>();
 		clefObject = transform.Find("Clef").gameObject;
         clefSpriteRenderer = clefObject.GetComponent<SpriteRenderer>();
         InitDict();
@@ -185,6 +187,7 @@ public class StaffMasterController : MonoBehaviour {
 
     public void SetClef(string clefName, int staffLine)
     {
+        audioSource.Play(0);
         if (staffLine < 1 || staffLine > 5)
         {
             Debug.LogError("Invalid range for clef positions", gameObject);
@@ -194,7 +197,7 @@ public class StaffMasterController : MonoBehaviour {
         {
             case "g":
                 clefSpriteRenderer.sprite = clefSpriteG;
-                clefSpriteRenderer.color = Color.blue;
+                clefSpriteRenderer.color = Color.cyan;
                 break;
             case "f":
                 clefSpriteRenderer.sprite = clefSpriteF;

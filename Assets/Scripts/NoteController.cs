@@ -37,7 +37,7 @@ public class NoteController : MonoBehaviour {
         {
             case "g":
                 animator.SetBool("ClefG", true);
-                spriteRenderer.color = Color.blue;
+                spriteRenderer.color = Color.cyan;
                 break;
             case "f":
                 animator.SetBool("ClefF", true);

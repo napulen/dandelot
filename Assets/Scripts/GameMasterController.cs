@@ -65,12 +65,12 @@ public class GameMasterController : MonoBehaviour {
     {
         if (caller == noteMaster.gameObject)
         {
-            Debug.Log("I have heard that a note has been mispelled", gameObject);
+            // Debug.Log("I have heard that a note has been mispelled", gameObject);
             streak = 0;
         }
         else
         {
-            Debug.LogError("I only listen to EventNoteMispelled() calls from the NoteMaster", gameObject);
+            // Debug.LogError("I only listen to EventNoteMispelled() calls from the NoteMaster", gameObject);
         }
     }
 
@@ -78,11 +78,11 @@ public class GameMasterController : MonoBehaviour {
     {
         if (caller == noteMaster.gameObject)
         {
-            Debug.Log("I have heard that a note has been spelled", gameObject);
+            // Debug.Log("I have heard that a note has been spelled", gameObject);
         }
         else
         {
-            Debug.LogError("I only listen to EventNoteSpelled() calls from the NoteMaster", gameObject);
+            // Debug.LogError("I only listen to EventNoteSpelled() calls from the NoteMaster", gameObject);
         }
     }
 

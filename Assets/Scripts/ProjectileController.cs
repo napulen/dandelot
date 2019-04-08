@@ -7,6 +7,7 @@ public class ProjectileController : MonoBehaviour {
 	private SpriteRenderer spriteRenderer;
 	private Rigidbody2D rigidbody2D;
 	private NoteMasterController noteMaster;
+	private AudioSource audioSource;
 	private float a;
 	private float initialSpeed;
 	private float speed;
