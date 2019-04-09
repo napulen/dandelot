@@ -19,7 +19,7 @@ public class UIController : MonoBehaviour {
 
     void Play ()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Dandelot");
     }
 
     void Quit ()

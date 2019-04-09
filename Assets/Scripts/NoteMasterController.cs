@@ -113,6 +113,15 @@ public class NoteMasterController : MonoBehaviour {
         }
     }
 
+    public NoteController GetFrontNote()
+    {
+        if (noteQueue.Count > 0)
+        {
+            return noteQueue.Peek();
+        }
+        return null;
+    }
+
     public bool IsFrontNote(NoteController note)
     {
         return (noteQueue.Count > 0 && noteQueue.Peek() == note);

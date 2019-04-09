@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StaffMasterController : MonoBehaviour {
 	private GameMasterController gameMaster;
@@ -10,6 +11,7 @@ public class StaffMasterController : MonoBehaviour {
     public Sprite clefSpriteG;
     public Sprite clefSpriteF;
     public Sprite clefSpriteC;
+    public Image clefChangeAnimation;
     public ProjectileController projectilePrefab;
     private SpriteRenderer clefSpriteRenderer;
     private AudioSource audioSource;
@@ -34,15 +36,17 @@ public class StaffMasterController : MonoBehaviour {
 
 	private void Update ()
 	{
-		// timeElapsed += Time.deltaTime;
-        // if (timeElapsed > rotationTimeout)
-        // {
-        //     timeElapsed = 0f;
-        //     string[] clefs = new string[] {"g_2", "f_4", "c_3"};
-        //     int clefId = Random.Range(0, 3);
-        //     int staffId = Random.Range(0, staffList.Count);
-        //     staffList[staffId].SetClef(clefs[clefId]);
-        // }
+		NoteController leftmostNote = noteMaster.GetFrontNote();
+        if (leftmostNote != null && leftmostNote.GetClefType() != currentClef)
+        {
+            clefChangeAnimation.gameObject.SetActive(true);
+            gameMaster.EventWrongClef(gameObject);
+        }
+        else
+        {
+            clefChangeAnimation.gameObject.SetActive(false);
+            gameMaster.EventRightClef(gameObject);
+        }
 	}
 
 	private void InitDict()

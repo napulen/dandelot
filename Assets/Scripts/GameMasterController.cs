@@ -2,24 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameMasterController : MonoBehaviour {
     private InputHandlerController inputHandler;
     private NoteMasterController noteMaster;
     private StaffMasterController staffMaster;
+    private AudioSource audioSource;
 
     public Text streakText;
     public Text scoreText;
+    public AudioClip wrongClef;
+    public AudioClip wrongNote;
 
     private int streak;
-    private int score;
+    private bool isSearchingClef;
+    private int bestStreak;
+    private int correctNotes;
+    private int misspelledNotes;
 
 	private void Start ()
     {
         inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
         noteMaster = GameObject.Find("NoteMaster").GetComponent<NoteMasterController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
+        audioSource = GetComponent<AudioSource>();
         noteMaster.EventStartSpawningNotes(gameObject);
+        isSearchingClef = false;
+        bestStreak = 0;
 	}
 
 	private void Update ()
@@ -32,7 +42,7 @@ public class GameMasterController : MonoBehaviour {
         {
             streakText.text = "";
         }
-        scoreText.text = "Score: " + score;
+        scoreText.text = "Score: " + correctNotes;
 	}
 
     public void EventNoteSpawned(GameObject caller)
@@ -52,8 +62,12 @@ public class GameMasterController : MonoBehaviour {
         if (caller == noteMaster.gameObject)
         {
             Debug.Log("I have heard that a note has been destroyed", gameObject);
-            score++;
+            correctNotes++;
             streak++;
+            if (streak > bestStreak)
+            {
+                bestStreak = streak;
+            }
         }
         else
         {
@@ -67,6 +81,12 @@ public class GameMasterController : MonoBehaviour {
         {
             // Debug.Log("I have heard that a note has been mispelled", gameObject);
             streak = 0;
+            misspelledNotes++;
+            if (!isSearchingClef)
+            {
+                audioSource.clip = wrongNote;
+                audioSource.Play();
+            }
         }
         else
         {
@@ -91,7 +111,10 @@ public class GameMasterController : MonoBehaviour {
         if (caller == noteMaster.gameObject)
         {
             Debug.Log("It seems the user has missed a note", gameObject);
-
+            StaticClass.BestStreak = bestStreak;
+            StaticClass.CorrectNotes = correctNotes;
+            StaticClass.MisspelledNotes = misspelledNotes;
+            SceneManager.LoadScene("GameOver");
         }
         else
         {
@@ -108,6 +131,39 @@ public class GameMasterController : MonoBehaviour {
         else
         {
             Debug.LogError("I only listen to EventClefChanged() calls from the StaffMaster", gameObject);
+        }
+    }
+
+    public void EventWrongClef(GameObject caller)
+    {
+        if (caller == staffMaster.gameObject)
+        {
+            if (!isSearchingClef)
+            {
+                isSearchingClef = true;
+                audioSource.clip = wrongClef;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventWrongClef() calls from the StaffMaster", gameObject);
+        }
+    }
+
+    public void EventRightClef(GameObject caller)
+    {
+        if (caller == staffMaster.gameObject)
+        {
+            if (isSearchingClef)
+            {
+                isSearchingClef = false;
+                audioSource.Stop();
+            }
+        }
+        else
+        {
+            Debug.LogError("I only listen to EventWrongClef() calls from the StaffMaster", gameObject);
         }
     }
 }
