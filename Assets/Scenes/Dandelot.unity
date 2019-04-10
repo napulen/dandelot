@@ -295,7 +295,7 @@ MonoBehaviour:
   scoreText: {fileID: 1497550086}
   wrongClef: {fileID: 8300000, guid: b515d85dfb7cbb84795063990e48beba, type: 3}
   wrongNote: {fileID: 8300000, guid: 5d4c549b90be66d4c93c48e297205d80, type: 3}
-  performanceCheckThreshold: 3
+  performanceCheckThreshold: 2
 --- !u!4 &253543819
 Transform:
   m_ObjectHideFlags: 0

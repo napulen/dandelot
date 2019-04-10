@@ -19,7 +19,8 @@ public class StaffMasterController : MonoBehaviour {
     private string currentClefName;
     private int currentClefStaffLine;
     private Dictionary<string, Dictionary<float, string> > clefDictionary;
-	private int difficulty;
+
+    private float probG2, probF4, probC3;
 
 	private void Awake ()
 	{
@@ -31,7 +32,7 @@ public class StaffMasterController : MonoBehaviour {
         clefSpriteRenderer = clefObject.GetComponent<SpriteRenderer>();
         InitDict();
         SetClef("g_2");
-		difficulty = 0;
+        AdjustDifficulty(0);
 	}
 
 	private void Update ()
@@ -48,6 +49,78 @@ public class StaffMasterController : MonoBehaviour {
             gameMaster.EventRightClef(gameObject);
         }
 	}
+
+    private void AdjustDifficulty(int difficulty)
+    {
+        switch(difficulty)
+        {
+            case 0:
+                probG2 = 1.0f;
+                probF4 = 0.0f;
+                probC3 = 0.0f;
+                break;
+            case 1:
+                probG2 = 1.0f;
+                probF4 = 0.0f;
+                probC3 = 0.0f;
+                break;
+            case 2:
+                probG2 = 1.0f;
+                probF4 = 0.0f;
+                probC3 = 0.0f;
+                break;
+            case 3:
+                probG2 = 1.0f;
+                probF4 = 0.0f;
+                probC3 = 0.0f;
+                break;
+            case 4:
+                probG2 = 1.0f;
+                probF4 = 0.0f;
+                probC3 = 0.0f;
+                break;
+            case 5:
+                probG2 = 0.8f;
+                probF4 = 1.0f;
+                probC3 = 0.0f;
+                break;
+            case 6:
+                probG2 = 0.7f;
+                probF4 = 1.0f;
+                probC3 = 0.0f;
+                break;
+            case 7:
+                probG2 = 0.6f;
+                probF4 = 1.0f;
+                probC3 = 0.0f;
+                break;
+            case 8:
+                probG2 = 0.5f;
+                probF4 = 1.0f;
+                probC3 = 0.0f;
+                break;
+            case 9:
+                probG2 = 0.45f;
+                probF4 = 0.9f;
+                probC3 = 1.0f;
+                break;
+            case 10:
+                probG2 = 0.4f;
+                probF4 = 0.8f;
+                probC3 = 1.0f;
+                break;
+            case 11:
+                probG2 = 0.35f;
+                probF4 = 0.7f;
+                probC3 = 1.0f;
+                break;
+            case 12:
+                probG2 = 0.33f;
+                probF4 = 0.66f;
+                probC3 = 1.0f;
+                break;
+        }
+    }
 
 	private void InitDict()
     {
@@ -146,12 +219,12 @@ public class StaffMasterController : MonoBehaviour {
         };
     }
 
-    public void EventDifficultyChanged(int d, GameObject caller)
+    public void EventDifficultyChanged(int difficulty, GameObject caller)
     {
         if (caller == gameMaster.gameObject)
         {
-            difficulty = d;
-            Debug.Log("I heard that the difficulty has changed to " + d, gameObject);
+            // Debug.Log("I heard that the difficulty has changed to " + difficulty, gameObject);
+            AdjustDifficulty(difficulty);
         }
         else
         {
@@ -269,8 +342,21 @@ public class StaffMasterController : MonoBehaviour {
 
     public string GenerateClefForNote()
     {
-        string [] clefs = {"g_2", "f_4"};
-        int randClef = Random.Range(0, clefs.Length);
-        return clefs[randClef];
+        string [] clefs = {"g_2", "f_4", "c_3"};
+        float rand = Random.Range(0f, 1f);
+        int clef = 0;
+        if (rand <= probG2)
+        {
+            clef = 0;
+        }
+        else if (rand <= probF4)
+        {
+            clef = 1;
+        }
+        else
+        {
+            clef = 2;
+        }
+        return clefs[clef];
     }
 }

@@ -14,12 +14,12 @@ public class GameMasterController : MonoBehaviour {
     public Text scoreText;
     public AudioClip wrongClef;
     public AudioClip wrongNote;
-    public float performanceCheckThreshold;
+    public int performanceCheckThreshold;
 
     private int level;
     private int streak;
     private int score;
-    private float performanceCheckDelta;
+    private bool updatePerformance;
     private bool isSearchingClef;
     private int bestStreak;
     private int correctNotes;
@@ -40,15 +40,13 @@ public class GameMasterController : MonoBehaviour {
         isSearchingClef = false;
         bestStreak = 0;
         score = 0;
-        level = -1;
-
-        performanceCheckDelta = 0;
+        level = 0;
         previousPerformance = -1;
+        updatePerformance = true;
 	}
 
 	private void Update ()
     {
-        performanceCheckDelta += Time.deltaTime;
         if (streak > 1)
         {
             streakText.text = streak + "x streak!";
@@ -57,17 +55,17 @@ public class GameMasterController : MonoBehaviour {
         {
             streakText.text = "";
         }
-        if (notesSpawned > 0 && performanceCheckDelta > performanceCheckThreshold)
+        if (updatePerformance)
         {
-            performanceCheckDelta = 0f;
+            updatePerformance = false;
             int activeNotes = notesSpawned - correctNotes;
-            float positive = correctNotes / (float)notesSpawned;
+            float positivePerformance = correctNotes / (float)notesSpawned;
             if (activeNotes > previousActiveNotes)
             {
-                positive = correctNotes / (float)(notesSpawned + activeNotes);
+                positivePerformance = correctNotes / (float)(notesSpawned + activeNotes);
             }
-            float negative = misspelledNotes / (float)notesSpawned;
-            float performance = positive - negative;
+            float negativePerformance = misspelledNotes / (float)notesSpawned;
+            float performance = positivePerformance - negativePerformance;
             Debug.Log("Performance: " + performance);
             if (performance > previousPerformance)
             {
@@ -86,7 +84,6 @@ public class GameMasterController : MonoBehaviour {
             }
             previousPerformance = performance;
             previousLevel = level;
-
         }
         scoreText.text = "Score: " + score;
 	}
@@ -97,6 +94,10 @@ public class GameMasterController : MonoBehaviour {
         {
             // Debug.Log("I have heard that a note has been spawned", gameObject);
             notesSpawned++;
+            if (notesSpawned % performanceCheckThreshold == 0)
+            {
+                updatePerformance = true;
+            }
         }
         else
         {

@@ -13,6 +13,7 @@ public class NoteMasterController : MonoBehaviour {
     private float notePositionX0;
     private float elapsedTime;
     private float noteSpawnInterval;
+    private int lastStaffPosition;
     private int noteRangeMin;
     private int noteRangeMax;
 
@@ -36,7 +37,6 @@ public class NoteMasterController : MonoBehaviour {
         if (shouldSpawnNotes && elapsedTime > noteSpawnInterval)
         {
             elapsedTime = 0f;
-
             Vector3 position = getNotePosition();
             NoteController newNote = Instantiate(noteprefab, transform).GetComponent<NoteController>();
             newNote.transform.position = position;
@@ -50,7 +50,11 @@ public class NoteMasterController : MonoBehaviour {
 
     private Vector3 getNotePosition ()
     {
-        int staffPosition = Random.Range(noteRangeMin, noteRangeMax);
+        int staffPosition;
+        do {
+            staffPosition = Random.Range(noteRangeMin, noteRangeMax);
+        } while (staffPosition == lastStaffPosition);
+        lastStaffPosition = staffPosition;
         float originY = -3f + staffPosition * 0.5f;
         return new Vector3(notePositionX0, originY, 0f);
     }
