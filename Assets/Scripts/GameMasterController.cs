@@ -14,12 +14,21 @@ public class GameMasterController : MonoBehaviour {
     public Text scoreText;
     public AudioClip wrongClef;
     public AudioClip wrongNote;
+    public float performanceCheckThreshold;
 
+    private int level;
     private int streak;
+    private int score;
+    private float performanceCheckDelta;
     private bool isSearchingClef;
     private int bestStreak;
     private int correctNotes;
     private int misspelledNotes;
+    private int notesSpawned;
+    private float previousPerformance;
+    private int previousLevel;
+    private int previousActiveNotes;
+
 
 	private void Start ()
     {
@@ -30,10 +39,16 @@ public class GameMasterController : MonoBehaviour {
         noteMaster.EventStartSpawningNotes(gameObject);
         isSearchingClef = false;
         bestStreak = 0;
+        score = 0;
+        level = -1;
+
+        performanceCheckDelta = 0;
+        previousPerformance = -1;
 	}
 
 	private void Update ()
     {
+        performanceCheckDelta += Time.deltaTime;
         if (streak > 1)
         {
             streakText.text = streak + "x streak!";
@@ -42,14 +57,46 @@ public class GameMasterController : MonoBehaviour {
         {
             streakText.text = "";
         }
-        scoreText.text = "Score: " + correctNotes;
+        if (notesSpawned > 0 && performanceCheckDelta > performanceCheckThreshold)
+        {
+            performanceCheckDelta = 0f;
+            int activeNotes = notesSpawned - correctNotes;
+            float positive = correctNotes / (float)notesSpawned;
+            if (activeNotes > previousActiveNotes)
+            {
+                positive = correctNotes / (float)(notesSpawned + activeNotes);
+            }
+            float negative = misspelledNotes / (float)notesSpawned;
+            float performance = positive - negative;
+            Debug.Log("Performance: " + performance);
+            if (performance > previousPerformance)
+            {
+                level = level < 12 ? level + 1: 12;
+                Debug.Log("Increasing difficulty to " + level.ToString());
+            }
+            else if (performance < previousPerformance)
+            {
+                level = level > 0 ? level - 1: 0;
+                Debug.Log("Decreasing difficulty to " + level.ToString());
+            }
+            if (level != previousLevel)
+            {
+                noteMaster.EventDifficultyChanged(level, gameObject);
+                staffMaster.EventDifficultyChanged(level, gameObject);
+            }
+            previousPerformance = performance;
+            previousLevel = level;
+
+        }
+        scoreText.text = "Score: " + score;
 	}
 
     public void EventNoteSpawned(GameObject caller)
     {
         if (caller == noteMaster.gameObject)
         {
-            Debug.Log("I have heard that a note has been spawned", gameObject);
+            // Debug.Log("I have heard that a note has been spawned", gameObject);
+            notesSpawned++;
         }
         else
         {
@@ -61,9 +108,10 @@ public class GameMasterController : MonoBehaviour {
     {
         if (caller == noteMaster.gameObject)
         {
-            Debug.Log("I have heard that a note has been destroyed", gameObject);
-            correctNotes++;
+            // Debug.Log("I have heard that a note has been destroyed", gameObject);
             streak++;
+            correctNotes++;
+            score += streak;
             if (streak > bestStreak)
             {
                 bestStreak = streak;
@@ -111,6 +159,7 @@ public class GameMasterController : MonoBehaviour {
         if (caller == noteMaster.gameObject)
         {
             Debug.Log("It seems the user has missed a note", gameObject);
+            StaticClass.Score = score;
             StaticClass.BestStreak = bestStreak;
             StaticClass.CorrectNotes = correctNotes;
             StaticClass.MisspelledNotes = misspelledNotes;
@@ -126,7 +175,7 @@ public class GameMasterController : MonoBehaviour {
     {
         if (caller == staffMaster.gameObject)
         {
-            Debug.Log("I have heard that a clef has changed", gameObject);
+            // Debug.Log("I have heard that a clef has changed", gameObject);
         }
         else
         {

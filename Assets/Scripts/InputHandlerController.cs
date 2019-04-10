@@ -165,12 +165,12 @@ public class InputHandlerController : MonoBehaviour {
                 if (sign > 0)
                 {
                     clefIndex = (clefIndex + 1) % 3;
-                    Debug.Log("Rotating right!");
+                    // Debug.Log("Rotating right!");
                 }
                 else
                 {
                     clefIndex = (clefIndex + 2) % 3;
-                    Debug.Log("Rotating left!");
+                    // Debug.Log("Rotating left!");
                 }
                 switch(clefIndex)
                 {

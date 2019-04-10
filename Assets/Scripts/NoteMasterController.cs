@@ -4,25 +4,17 @@ using UnityEngine;
 
 public class NoteMasterController : MonoBehaviour {
     public NoteController noteprefab;
-    public List<Sprite> noteheadsDoReMi;
-    public List<Sprite> noteheadsCDE;
     private GameMasterController gameMaster;
     private InputHandlerController inputHandler;
     private StaffMasterController staffMaster;
     private Queue<NoteController> noteQueue;
-    private float avgNoteSpawnInterval;
     private float noteVelocity;
     private bool shouldSpawnNotes;
     private float notePositionX0;
     private float elapsedTime;
-    private float currentNoteSpawnInterval;
-    private int difficulty;
-
-    // temporary
-    private float posbottom;
-    private float postop;
-    private float currentpos;
-    private float direction;
+    private float noteSpawnInterval;
+    private int noteRangeMin;
+    private int noteRangeMax;
 
     private void Awake ()
     {
@@ -30,48 +22,109 @@ public class NoteMasterController : MonoBehaviour {
         inputHandler = GameObject.Find("InputHandler").GetComponent<InputHandlerController>();
         staffMaster = GameObject.Find("StaffMaster").GetComponent<StaffMasterController>();
         noteQueue = new Queue<NoteController>();
-        difficulty = 0;
-        avgNoteSpawnInterval = 1f;
         noteVelocity = 2f;
         shouldSpawnNotes = false;
         GameObject pageArea = GameObject.Find("PageArea");
         notePositionX0 = pageArea.transform.localScale.x / 2f;
         elapsedTime = 0f;
-        currentNoteSpawnInterval = avgNoteSpawnInterval;
-
-        // temporary
-        posbottom = -5f;
-        postop = 5f;
-        currentpos = posbottom;
-        direction = 1f;
+        AdjustDifficulty(0);
     }
 
     void Update ()
     {
         elapsedTime += Time.deltaTime;
-        if (shouldSpawnNotes && elapsedTime > currentNoteSpawnInterval)
+        if (shouldSpawnNotes && elapsedTime > noteSpawnInterval)
         {
-            // temporary
-            if (currentpos > postop) direction = -1f;
-            if (currentpos < posbottom) direction = 1f;
-            currentpos += 0.5f * direction;
-
             elapsedTime = 0f;
-            Vector3 position = new Vector3(notePositionX0, currentpos, 0f);
+
+            Vector3 position = getNotePosition();
             NoteController newNote = Instantiate(noteprefab, transform).GetComponent<NoteController>();
             newNote.transform.position = position;
-            float staffPosition = staffMaster.PositionY2StaffPosition(currentpos);
+            float staffPosition = staffMaster.PositionY2StaffPosition(position.y);
             string clef = staffMaster.GenerateClefForNote();
             newNote.Initialize(noteVelocity, clef, staffPosition);
             noteQueue.Enqueue(newNote);
+            gameMaster.EventNoteSpawned(gameObject);
         }
 	}
 
     private Vector3 getNotePosition ()
     {
-        int staffPosition = Random.Range(-6, 18);
+        int staffPosition = Random.Range(noteRangeMin, noteRangeMax);
         float originY = -3f + staffPosition * 0.5f;
         return new Vector3(notePositionX0, originY, 0f);
+    }
+
+    private void AdjustDifficulty(int difficulty)
+    {
+        switch(difficulty)
+        {
+            case 0:
+                noteSpawnInterval = 6.0f;
+                noteRangeMin = 5;
+                noteRangeMax = 7;
+                break;
+            case 1:
+                noteSpawnInterval = 6.0f;
+                noteRangeMin = 5;
+                noteRangeMax = 7;
+                break;
+            case 2:
+                noteSpawnInterval = 5.5f;
+                noteRangeMin = 4;
+                noteRangeMax = 8;
+                break;
+            case 3:
+                noteSpawnInterval = 5.0f;
+                noteRangeMin = 3;
+                noteRangeMax = 9;
+                break;
+            case 4:
+                noteSpawnInterval = 4.5f;
+                noteRangeMin = 2;
+                noteRangeMax = 10;
+                break;
+            case 5:
+                noteSpawnInterval = 4.0f;
+                noteRangeMin = 1;
+                noteRangeMax = 11;
+                break;
+            case 6:
+                noteSpawnInterval = 3.5f;
+                noteRangeMin = 0;
+                noteRangeMax = 12;
+                break;
+            case 7:
+                noteSpawnInterval = 3.0f;
+                noteRangeMin = -1;
+                noteRangeMax = 13;
+                break;
+            case 8:
+                noteSpawnInterval = 2.5f;
+                noteRangeMin = -2;
+                noteRangeMax = 14;
+                break;
+            case 9:
+                noteSpawnInterval = 2.0f;
+                noteRangeMin = -3;
+                noteRangeMax = 15;
+                break;
+            case 10:
+                noteSpawnInterval = 1.5f;
+                noteRangeMin = -4;
+                noteRangeMax = 16;
+                break;
+            case 11:
+                noteSpawnInterval = 1.0f;
+                noteRangeMin = -5;
+                noteRangeMax = 17;
+                break;
+            case 12:
+                noteSpawnInterval = 0.75f;
+                noteRangeMin = -6;
+                noteRangeMax = 18;
+                break;
+        }
     }
 
     public void EventNoteSpelled(string note, GameObject caller)
@@ -150,12 +203,12 @@ public class NoteMasterController : MonoBehaviour {
         }
     }
 
-    public void EventDifficultyChanged(int d, GameObject caller)
+    public void EventDifficultyChanged(int difficulty, GameObject caller)
     {
         if (caller == gameMaster.gameObject)
         {
-            difficulty = d;
-            Debug.Log("I heard that the difficulty has changed to " + d, gameObject);
+            AdjustDifficulty(difficulty);
+            Debug.Log("I heard that the difficulty has changed to " + difficulty, gameObject);
         }
         else
         {
