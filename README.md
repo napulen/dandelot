@@ -1,7 +1,7 @@
 # dandelot
 Reading music as a game.
 
-A game made by Nestor Napoles Lopez in April 2019.
+A game made by Néstor Nápoles López in April 2019.
 
 Presented at the Learning Music Through Play (LMusTP) conference 2019.
 
